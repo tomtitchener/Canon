@@ -19,7 +19,7 @@ commonCanonToScore title keySignature timeSignature tempos ixNotess scales rhyth
     xpNotes      = zipWith3 (\scale interval notes -> map (transposeNote scale interval) notes) scales intervals notess
     tunes        = map (concat . replicate repetitions) xpNotes
     incr         = 127 `div` length instruments
-    pans         = map (\i -> PanControl (Pan (incr * i))) [0,1..]
+    pans         = map (\i -> PanControl (Pan (PanVal (incr * i)))) [0,1..]
     durs         = map getRhythm rhythms                   -- [2%1, 1%4, 1%8]
     leadDurs     = scanl (+) (head durs) (tail durs)       -- [2%1, 9%4, 19%8]
     leadRests    = map (\dur -> Rest (Rhythm dur) Set.empty) leadDurs
