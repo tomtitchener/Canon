@@ -28,6 +28,7 @@ library
                        RealSimpleMusic,
                        containers,
                        bytestring,
+                       either,
                        HUnit
   hs-source-dirs:      src
   default-language:    Haskell2010
@@ -49,6 +50,7 @@ test-suite canon-tests
                     tasty-quickcheck,
                     vector,
                     containers,
+                    either,
                     RealSimpleMusic
   default-language: Haskell2010
   ghc-options:      -Wall -Werror -fwarn-incomplete-patterns -fwarn-incomplete-uni-patterns -fno-warn-orphans

@@ -5,6 +5,7 @@ import           Canon.Data
 import           Canon.Utils
 import qualified Data.ByteString.Lazy as LazyByteString
 import           Data.Ratio
+import           Data.Either.Combinators (fromRight')
 import qualified Data.Set as Set
 import           RealSimpleMusic
 import           Test.HUnit
@@ -90,17 +91,17 @@ marimba = Instrument "Marimba"
 vibes = Instrument "Vibraphone"
 
 cMaj, afMaj, eMaj, fMaj, gMaj, dMaj, aMaj, cMin, afMin, eMin, dMin :: Scale
-cMaj  = majorScale C
-afMaj = majorScale Af
-eMaj  = majorScale E
-fMaj  = majorScale F
-gMaj  = majorScale G
-dMaj  = majorScale D
-aMaj  = majorScale A
-dMin  = naturalMinorScale D
-eMin  = naturalMinorScale E
-cMin  = naturalMinorScale C
-afMin = naturalMinorScale Af
+cMaj  = fromRight' $ majorScale C
+afMaj = fromRight' $ majorScale Af
+eMaj  = fromRight' $ majorScale E
+fMaj  = fromRight' $ majorScale F
+gMaj  = fromRight' $ majorScale G
+dMaj  = fromRight' $ majorScale D
+aMaj  = fromRight' $ majorScale A
+dMin  = fromRight' $ naturalMinorScale D
+eMin  = fromRight' $ naturalMinorScale E
+cMin  = fromRight' $ naturalMinorScale C
+afMin = fromRight' $ naturalMinorScale Af
 
 keySignature :: KeySignature
 keySignature = KeySignature (-1) -- F Major, one flat.
