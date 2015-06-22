@@ -13,11 +13,22 @@ commonCanonToScore ::  Title -> KeySignature -> TimeSignature -> [(Tempo,Rhythm)
 commonCanonToScore title keySignature timeSignature tempos ixNotess scales rhythms octaves instruments repetitions =
   Score title "folk" scoreControl voices
   where
-    lenScale     = length $ ascendingScale $ head scales
-    notess       = zipWith indexedNotesToNotes scales ixNotess
-    intervals    = map ((* lenScale) . getOctave) octaves
-    xpNotes      = zipWith3 (\scale interval notes -> map (transposeNote scale interval) notes) scales intervals notess
-    tunes        = map (concat . replicate repetitions) xpNotes
+    -- TBD:  transposeNote here is an API that can error and is going to be deprecated.
+    -- Re-arrange so transpose happens by interval to ixNotess first, then transposed
+    -- IndexedNote gets mapped to pitches after being transposed.  Then I can eliminate
+    -- transposeNote.
+    -- transposeIndexedPitch scale interval indexedpitch -> indexedPitch
+    lenScales   = map (length . ascendingScale) scales
+    intervals   = zipWith (\lenScale octave -> lenScale * (getOctave octave)) lenScales octaves
+    xpIxNotess  = zipWith3 (\scale interval ixNotes -> map (transposeIndexedNote scale interval) ixNotes) scales intervals ixNotess
+    xpNotess    = zipWith (\scale ixNotes -> map (indexedNoteToNote scale) ixNotes) scales xpIxNotess
+
+    --lenScale     = length $ ascendingScale $ head scales
+    --notess       = zipWith indexedNotesToNotes scales ixNotess
+    --intervals    = map ((* lenScale) . getOctave) octaves
+    -- xpNotes      = zipWith3 (\scale interval notes -> map (transposeNote scale interval) notes) scales intervals notess
+    
+    tunes        = map (concat . replicate repetitions) xpNotess
     incr         = 127 `div` length instruments
     pans         = map (\i -> PanControl (Pan (PanVal (incr * i)))) [0,1..]
     durs         = map getRhythm rhythms                   -- [2%1, 1%4, 1%8]
