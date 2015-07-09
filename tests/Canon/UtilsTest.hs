@@ -76,9 +76,9 @@ fjIxNotes :: [IndexedNote]
 fjIxNotes = zipWith3 IndexedNote fjIndexedPitches fjRhythms fjControls
 
 eig, qtr, hlf :: Rhythm
-eig = Rhythm (1%8)
-qtr = Rhythm (1%4)
-hlf = Rhythm (1%2)
+eig = mkRhythm' (1%8)
+qtr = mkRhythm' (1%4)
+hlf = mkRhythm' (1%2)
 rh1, rh2, rh3, fjRhythms :: [Rhythm]
 rh1 = [qtr, qtr, qtr, qtr]
 rh2 = [qtr, qtr, hlf]
@@ -110,16 +110,16 @@ timeSignature :: TimeSignature
 timeSignature = TimeSignature 4 4
 
 slowTempo :: Tempo
-slowTempo = Tempo (Rhythm (1%4)) 80
+slowTempo = Tempo (TempoVal Quarter 80)
 
 fastTempo :: Tempo
-fastTempo = Tempo (Rhythm (1%4)) 120
+fastTempo = Tempo (TempoVal Quarter 120)
 
 oneMeasure :: Rhythm
-oneMeasure = Rhythm (1%1)
+oneMeasure = mkRhythm' (1%1)
 
 fjRhythmTotal :: Rhythm
-fjRhythmTotal = sum fjRhythms - oneMeasure
+fjRhythmTotal = mkRhythm' $ sum (map getRhythm fjRhythms) - (getRhythm oneMeasure)
 
 tempos :: [(Tempo,Rhythm)]
 tempos = [(slowTempo,oneMeasure),(Accelerando,fjRhythmTotal),(fastTempo,oneMeasure),(Ritardando,fjRhythmTotal),(slowTempo,oneMeasure)]
@@ -132,7 +132,7 @@ createFJSimpleCanon instrName voices dur =
     title = "Frere Jacques Simple"
     ixNotes = fjIxNotes
     instr = Instrument instrName
-    distance = Rhythm dur
+    distance = mkRhythm' dur
     repetitions = 5
 
 writeFJSimpleCanon :: (Score -> a) -> String -> Int -> Rational -> a
@@ -165,7 +165,7 @@ createFJScalesCanon instruments scales octaves dur =
   where
     title = "Frere Jacques Scales"
     ixNotes = fjIxNotes
-    distance = Rhythm dur
+    distance = mkRhythm' dur
     repetitions = 5
 
 writeFJScalesCanon :: (Score -> a) -> [Instrument] -> [Scale] -> [Int] -> Rational -> a
@@ -199,7 +199,7 @@ createFJCanon instruments scales octaves durs =
   where
     title = "Frere Jacques Canon"
     ixNotess = replicate (length instruments) fjIxNotes
-    distances = map Rhythm durs
+    distances = map mkRhythm' durs
     repetitions = 5
 
 writeFJCanon :: (Score -> a) -> [Instrument] -> [Scale] -> [Int] -> [Rational] -> a

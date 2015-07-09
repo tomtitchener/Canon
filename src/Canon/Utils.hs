@@ -6,6 +6,10 @@ import           Canon.Data
 import           Data.List ()
 import qualified Data.Set as Set
 import           RealSimpleMusic
+import           Data.Either.Combinators
+
+mkRhythm' :: Rational -> Rhythm
+mkRhythm' = fromRight' . mkRhythm
 
 -- | Generalized converter for all Canon types to Score.
 --   Assumes:  lengths of ascending and descending notes of all [Scale] are the same.
@@ -18,7 +22,7 @@ commonCanonToScore title keySignature timeSignature tempos ixNotess scales rhyth
     -- IndexedNote gets mapped to pitches after being transposed.  Then I can eliminate
     -- transposeNote.
     -- transposeIndexedPitch scale interval indexedpitch -> indexedPitch
-    lenScales   = map (length . ascendingScale) scales
+    lenScales   = map (length . scaleToAscendingPitchClasses) scales
     intervals   = zipWith (\lenScale octave -> lenScale * (getOctave octave)) lenScales octaves
     xpIxNotess  = zipWith3 (\scale interval ixNotes -> map (transposeIndexedNote scale interval) ixNotes) scales intervals ixNotess
     xpNotess    = zipWith (\scale ixNotes -> map (indexedNoteToNote scale) ixNotes) scales xpIxNotess
@@ -33,10 +37,10 @@ commonCanonToScore title keySignature timeSignature tempos ixNotess scales rhyth
     pans         = map (\i -> PanControl (Pan (PanVal (incr * i)))) [0,1..]
     durs         = map getRhythm rhythms                   -- [2%1, 1%4, 1%8]
     leadDurs     = scanl (+) (head durs) (tail durs)       -- [2%1, 9%4, 19%8]
-    leadRests    = map (\dur -> Rest (Rhythm dur) Set.empty) leadDurs
+    leadRests    = map (\dur -> Rest (mkRhythm' dur) Set.empty) leadDurs
     revDurs      = reverse durs                            -- [1%8, 1%4, 2%1]
     tailDurs     = scanl (+) (head revDurs) (tail revDurs) -- [1%8, 3%8, 19%8]
-    tailRests    = map (\dur -> Rest (Rhythm dur) Set.empty) tailDurs
+    tailRests    = map (\dur -> Rest (mkRhythm' dur) Set.empty) tailDurs
     tunes'       = head tunes : zipWith (:) leadRests (tail tunes)
     tunes''      = reverse $ head rtunes : zipWith (\r t -> t ++ [r]) tailRests (tail rtunes) where rtunes = reverse tunes' -- trailing rests
     tunes'''     = zipWith (\tune pan -> addControlToNote (head tune) pan : tail tune) tunes'' pans -- pans
