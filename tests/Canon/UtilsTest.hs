@@ -119,7 +119,7 @@ oneMeasure :: Rhythm
 oneMeasure = mkRhythm' (1%1)
 
 fjRhythmTotal :: Rhythm
-fjRhythmTotal = mkRhythm' $ sum (map getRhythm fjRhythms) - (getRhythm oneMeasure)
+fjRhythmTotal = mkRhythm' $ sum (map getRhythm fjRhythms) - getRhythm oneMeasure
 
 tempos :: [(Tempo,Rhythm)]
 tempos = [(slowTempo,oneMeasure),(Accelerando,fjRhythmTotal),(fastTempo,oneMeasure),(Ritardando,fjRhythmTotal),(slowTempo,oneMeasure)]

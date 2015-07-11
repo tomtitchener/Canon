@@ -23,7 +23,7 @@ commonCanonToScore title keySignature timeSignature tempos ixNotess scales rhyth
     -- transposeNote.
     -- transposeIndexedPitch scale interval indexedpitch -> indexedPitch
     lenScales   = map (length . scaleToAscendingPitchClasses) scales
-    intervals   = zipWith (\lenScale octave -> lenScale * (getOctave octave)) lenScales octaves
+    intervals   = zipWith (\lenScale octave -> lenScale * getOctave octave) lenScales octaves
     xpIxNotess  = zipWith3 (\scale interval ixNotes -> map (transposeIndexedNote scale interval) ixNotes) scales intervals ixNotess
     xpNotess    = zipWith (\scale ixNotes -> map (indexedNoteToNote scale) ixNotes) scales xpIxNotess
 
