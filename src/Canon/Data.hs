@@ -3,7 +3,7 @@
 
 module Canon.Data where
 
-import RealSimpleMusic
+import Music.RealSimpleMusic
 
 -- | Simplest of all Canons.  Imitation at unison, all voices
 --   playing the same instrument.  Parameterized by title,

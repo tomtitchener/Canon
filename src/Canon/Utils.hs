@@ -5,7 +5,7 @@ module Canon.Utils where
 import           Canon.Data
 import           Data.List ()
 import qualified Data.Set as Set
-import           RealSimpleMusic
+import           Music.RealSimpleMusic
 import           Data.Either.Combinators
 
 mkRhythm' :: Rational -> Rhythm
