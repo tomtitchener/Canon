@@ -7,7 +7,7 @@ import qualified Data.ByteString.Lazy as LazyByteString
 import           Data.Ratio
 import           Data.Either.Combinators (fromRight')
 import qualified Data.Set as Set
-import           RealSimpleMusic
+import           Music.RealSimpleMusic
 import           Test.HUnit
 
 -- Frere Jacques
